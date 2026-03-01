@@ -1,0 +1,12 @@
+@import "tailwindcss";
+
+@font-face {
+    font-family: "GeistMono", monospace;
+    src: url("/GeistMono[wght].woff2");
+    font-weight: normal;
+    font-style: normal;
+}
+
+body {
+    font-family: "GeistMono", monospace;
+}
