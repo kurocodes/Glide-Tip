@@ -16,3 +16,4 @@ export interface TooltipTransition {
 }
 
 export type Direction = "top" | "bottom";
+export type Alignment = "center" | "smart";

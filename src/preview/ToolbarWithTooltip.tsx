@@ -66,7 +66,8 @@ export default function ToolbarWithTooltip() {
     <GlideTip
       items={toolbarItems}
       delay={100}
-      direction="bottom"
+      direction="top"
+      align="smart"
       triggersClassName="rounded-full border border-black/20 bg-[hsl(0deg_0%_90%)] p-1 shadow-sm"
       tooltipClassName=""
       renderTrigger={(item, _index, isActive) => (

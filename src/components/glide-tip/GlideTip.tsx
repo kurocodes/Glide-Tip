@@ -1,5 +1,10 @@
 import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
-import type { Direction, GlideTipItem, TooltipTransition } from "./types";
+import type {
+  Alignment,
+  Direction,
+  GlideTipItem,
+  TooltipTransition,
+} from "./types";
 import { useTooltipMeasurement } from "./useTooltipMeasurement";
 import { useTooltipController } from "./useTooltipController";
 import TooltipTriggers from "./TooltipTriggers";
@@ -9,6 +14,7 @@ interface GlideTipProps {
   items: GlideTipItem[];
   delay?: number;
   direction?: Direction;
+  align?: Alignment;
   transition?: TooltipTransition;
   containerClassName?: string;
   tooltipClassName?: string;
@@ -29,6 +35,7 @@ export function GlideTip({
   items,
   delay = 120,
   direction = "top",
+  align = "center",
   transition,
   containerClassName = "",
   tooltipClassName = "",
@@ -55,7 +62,7 @@ export function GlideTip({
     tooltipX,
     offset,
     updatePosition: updateTooltipPosition,
-  } = useTooltipController(items, widths, controlsRef, containerRef);
+  } = useTooltipController(items, widths, align, controlsRef, containerRef);
 
   useLayoutEffect(() => {
     controlsRef.current = controlsRef.current.slice(0, items.length);

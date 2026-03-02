@@ -31,7 +31,7 @@ export default function TooltipBubble({
   children,
 }: TooltipBubbleProps) {
   const directionClass =
-    direction === "bottom" ? "top-full mt-2" : "bottom-full mb-2";
+    direction === "bottom" ? "top-full mt-4" : "bottom-full mb-4";
 
   return (
     <motion.div

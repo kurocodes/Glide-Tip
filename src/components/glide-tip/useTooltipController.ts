@@ -1,9 +1,10 @@
 import { useCallback, useEffect, useState, type RefObject } from "react";
-import type { GlideTipItem } from "./types";
+import type { Alignment, GlideTipItem } from "./types";
 
 export function useTooltipController(
   items: GlideTipItem[],
   widths: number[],
+  align: Alignment,
   controlsRef: RefObject<(HTMLDivElement | null)[]>,
   containerRef: RefObject<HTMLDivElement | null>,
 ) {
@@ -22,13 +23,24 @@ export function useTooltipController(
     const controlRect = control.getBoundingClientRect();
     const containerRect = container.getBoundingClientRect();
 
-    const center =
-      controlRect.left - containerRect.left + controlRect.width / 2;
+    const left = controlRect.left - containerRect.left;
+    const controlWidth = controlRect.width;
+    const tooltipWidth = widths[activeIndex] ?? 0;
 
-    const currentWidth = widths[activeIndex] ?? 0;
+    let x = left + controlWidth / 2 - tooltipWidth / 2; // default center
 
-    setTooltipX(center - currentWidth / 2);
-  }, [activeIndex, widths, controlsRef, containerRef]);
+    if (align === "smart") {
+      if (activeIndex === 0) {
+        // align left edges
+        x = left;
+      } else if (activeIndex === items.length - 1) {
+        // align right edges
+        x = left + controlWidth - tooltipWidth;
+      }
+    }
+
+    setTooltipX((prev) => (prev === x ? prev : x));
+  }, [activeIndex, widths, align, items.length, controlsRef, containerRef]);
 
   useEffect(() => {
     updatePosition();
