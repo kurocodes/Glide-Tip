@@ -1,73 +1,201 @@
-# React + TypeScript + Vite
+# ✨ GlideTip
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A smooth, shape-shifting tooltip component with fluid motion and smart alignment.
 
-Currently, two official plugins are available:
+GlideTip is a reusable React component that lets tooltips glide, resize, and adapt seamlessly between triggers — without flicker or jumps.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+It’s designed to feel intentional, responsive, and just a little bit satisfying.
 
-## React Compiler
+You can use GlideTip for:
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- toolbars
+- action menus
+- form indicators
+- navigation hints
+- interactive UI previews
 
-## Expanding the ESLint configuration
+…and anywhere a tooltip deserves more than just “appearing” ✨
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## 🛠️ Technologies
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+- React
+- Motion (motion/react)
+- TypeScript
+- Tailwind CSS
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+## ✨ Features
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+- Smooth glide animation between triggers
+- Dynamic width interpolation (no snapping)
+- Content sliding inside tooltip
+- Smart alignment (prevents edge overflow)
+- Configurable transitions (spring / timing)
+- Custom trigger rendering
+- Custom label rendering
+- Direction control (top / bottom)
+- Hover + focus accessibility support
+- Delay control for hover interactions
+- Fully reusable & composable
+- Lightweight and flexible
+
+## 🧠 Process
+
+GlideTip didn’t start as a reusable component.
+
+It began as a small experiment —  </br>
+a tooltip that didn’t just “appear,” but *moved with intent*.
+
+While building it, I noticed something interesting:
+
+> Most tooltips feel disconnected from interaction.
+
+They pop in.  
+They pop out.  
+No continuity.
+
+So I focused on one idea:
+
+> “What if the tooltip behaved like a single entity,  
+> smoothly traveling across triggers?”
+
+That led to:
+
+- shared layout logic  
+- dynamic width transitions  
+- sliding content instead of swapping  
+- and eventually… smart edge alignment
+
+At some point, it stopped being “just a tooltip”  </br>
+and started feeling like a small motion system.
+
+So I turned it into GlideTip.
+
+## 🧩 Props
+
+GlideTip keeps things minimal but powerful.
+
+### Required
+
+- `items: GlideTipItem[]`  
+  Array of tooltip items (label + trigger).
+
+### Behavior
+
+- `delay?: number (default: 120)`  
+  Delay before tooltip appears/disappears on hover.
+
+- `direction?: "top" | "bottom" (default: "top")`  
+  Controls tooltip placement.
+
+- `align?: "center" | "smart" (default: "center")`  
+  Controls tooltip alignment:
+  - `"center"` → always centered
+  - `"smart"` → prevents overflow at edges  
+    (first = left aligned, last = right aligned)
+
+### Rendering
+
+- `renderTrigger?: (item, index, isActive) => ReactNode`  
+  Custom trigger renderer.
+
+- `renderLabel?: (item, index, isActive) => ReactNode`  
+  Custom tooltip content renderer.
+
+### Styling
+
+- `containerClassName?: string`  
+- `tooltipClassName?: string`  
+- `triggersClassName?: string`
+
+### Animation
+
+- `transition?: TooltipTransition`
+
+```ts
+type TooltipTransition = {
+  tooltip?: {
+    x?: Transition;
+    width?: Transition;
+    opacity?: Transition;
+  };
+  content?: Transition;
+};
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## 🧱 Item Structure
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```ts
+type GlideTipItem = {
+  id: string;
+  label: ReactNode;
+  trigger?: ReactNode;
+};
 ```
+
+## 🚀 Usage
+
+### Basic Example
+
+```
+<GlideTip
+  items={items}
+  align="smart"
+  direction="top"
+/>
+```
+
+### Toolbar Example
+
+```
+<GlideTip
+  items={toolbarItems}
+  align="smart"
+  triggersClassName="rounded-full border p-1"
+  renderTrigger={(item, _, isActive) => (
+    <button className={isActive ? "bg-neutral-300" : ""}>
+      {item.trigger}
+    </button>
+  )}
+/>
+```
+
+### Indicator Example
+
+```
+<GlideTip
+  items={[
+    { id: "1", label: "Step 1" },
+    { id: "2", label: "Step 2" },
+    { id: "3", label: "Step 3" },
+  ]}
+/>
+```
+
+## 🧪 Running the Project
+
+1. clone the repo:
+   `git clone https://github.com/your-username/glidetip.git`
+2. install dependencies:
+   `npm install`
+3. start dev server:
+   `npm run dev`
+
+Then open your browser and glide through it ✨
+
+## 👀 Preview
+
+<table> <tr> <td> <video src="YOUR_VIDEO_1" controls></video> </td> <td> <video src="YOUR_VIDEO_2" controls></video> </td> </tr> </table>
+
+## 💖 Final Note
+
+GlideTip is built around a simple idea:
+
+Motion should feel continuous, not reactive.
+
+It’s a small component, </br>
+but it carries a lot of intent in how it moves.
+
+Feel free to fork it, remix it, or use it in your own UI. </br>
+And if you build something beautiful with it…
+
+…I’d like to see it.
